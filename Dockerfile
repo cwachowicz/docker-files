@@ -1,39 +1,32 @@
-############################################################
-# Dockerfile to build Nginx Installed Containers
-# Based on Ubuntu
-############################################################
+#
+# Nginx Dockerfile
+#
+# https://github.com/dockerfile/nginx
+#
 
-# Set the base image to Ubuntu
-FROM ubuntu
+# Pull base image.
+FROM dockerfile/ubuntu
 
-# File Author / Maintainer
-MAINTAINER Chris 'The Wizard' Wachowicz
+# Install Nginx.
+RUN \
+  add-apt-repository -y ppa:nginx/stable && \
+  apt-get update && \
+  apt-get install -y nginx && \
+  rm -rf /var/lib/apt/lists/* && \
+  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
+  chown -R www-data:www-data /var/lib/nginx
 
-# Install Nginx
-# Add application repository URL to the default sources
-RUN echo "deb http://archive.ubuntu.com/ubuntu/ trusty main universe" >> /etc/apt/sources.list
+# Define mountable directories.
+VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
 
-# Update the repository
-RUN apt-get upgrade
-RUN apt-get update
+# Define working directory.
+WORKDIR /etc/nginx
 
-# Install necessary tools
-RUN apt-get install -y nano wget dialog net-tools
-
-# Download and Install Nginx
-RUN apt-get install -y nginx    
-
-# Remove the default Nginx configuration files
-RUN rm -v /etc/nginx/nginx.conf
-RUN rm -v /etc/nginx/sites-enabled/default
-
-# Copy a configuration file from the current directory
+# Copy Config
 ADD nginx.conf /etc/nginx/
-ADD api.localz.co.conf /etc/nginx/sites-enabled/
 
-# Expose ports
+# Define default command.
+CMD ["nginx"]
+
+# Expose ports.
 EXPOSE 80
-
-# Set the default command to execute
-# when creating a new container
-CMD service nginx start
