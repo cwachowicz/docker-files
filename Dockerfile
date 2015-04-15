@@ -23,7 +23,7 @@ WORKDIR /etc/nginx
 
 # Update the config files.
 #RUN rm -v /etc/nginx/sites-enabled/default
-#ADD nginx.conf /etc/nginx/
+ADD nginx.conf /etc/nginx/
 #ADD api.localz.co.conf /etc/nginx/sites-enabled/
 
 # Define default command.
