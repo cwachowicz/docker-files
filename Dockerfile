@@ -31,9 +31,6 @@ RUN rm -v /etc/nginx/sites-enabled/default
 ADD nginx.conf /etc/nginx/
 ADD api.localz.co.conf /etc/nginx/sites-enabled/
 
-# Append "daemon off;" to the beginning of the configuration
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-
 # Expose ports
 EXPOSE 80
 
